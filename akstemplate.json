@@ -281,7 +281,7 @@
       }
     },
     "kubernetesVersion": {
-      "defaultValue": "1.15.12",
+      "defaultValue": "1.16.10",
       "type": "string",
       "metadata": {
         "description": "The version of Kubernetes."
@@ -336,12 +336,10 @@
     "vnetName": "[concat('virtualnetwork' , variables('resgpguid'))]",
     "applicationGatewayName": "[concat('applicationgateway' , variables('resgpguid'))]",
     "identityName": "[concat('appgwContrIdentity' , variables('resgpguid'))]",
-    "fwpublicIpAddressName": "[concat('fwwpublicip' , variables('resgpguid'))]",
     "applicationGatewayPublicIpName": "[concat('appgwpublicip' , variables('resgpguid'))]",
     "kubernetesSubnetName": "kubesubnet",
+    "fwpublicIpAddressName": "[concat('fwwpublicip' , variables('resgpguid'))]",
     "applicationGatewaySubnetName": "appgwsubnet",
-    "firewallSubnetName": "fwsubnet",
-    "azureMonitorSubnetName": "azmonitorsubnet",
     "aksClusterName": "[concat('aks' , variables('resgpguid'))]",
     "vnetId": "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetName'))]",
     "kubernetesSubnetId": "[concat(variables('vnetID'),'/subnets/', variables('kubernetesSubnetName'))]",
@@ -634,6 +632,7 @@
         "[concat('Microsoft.Resources/deployments/', 'RoleAssignmentDeploymentForKubenetesSp')]"
       ]
     },
+
     {
       "name": "AzureFirewall",
       "type": "Microsoft.Network/azureFirewalls",
@@ -894,7 +893,7 @@
       }
     }
   ],
-  "outputs": {
+    "outputs": {
         "subscriptionId": {
             "type": "string",
             "value": "[subscription().subscriptionId]"
