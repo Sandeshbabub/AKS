@@ -816,7 +816,8 @@
                   ],
                   "sourceIpGroups": [],
                   "destinationAddresses": [
-                    "52.149.198.217"
+                    //"[resourceId('Microsoft.Network/publicIPAddresses', variables('fwpublicIpAddressName'))]"
+                    "[reference(resourceId('Microsoft.Network/publicIPAddresses',variables('fwpublicIpAddressName'))).IpAddress]"
                   ],
                   "destinationPorts": [
                     "443"
