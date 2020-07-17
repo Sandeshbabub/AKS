@@ -338,6 +338,7 @@
     "identityName": "[concat('appgwContrIdentity' , variables('resgpguid'))]",
     "applicationGatewayPublicIpName": "[concat('appgwpublicip' , variables('resgpguid'))]",
     "kubernetesSubnetName": "kubesubnet",
+    "firewallSubnetName": "AzureFirewallSubnet",
     "fwpublicIpAddressName": "[concat('fwwpublicip' , variables('resgpguid'))]",
     "applicationGatewaySubnetName": "appgwsubnet",
     "aksClusterName": "[concat('aks' , variables('resgpguid'))]",
@@ -386,6 +387,12 @@
             "name": "[variables('applicationGatewaySubnetName')]",
             "properties": {
               "addressPrefix": "[parameters('applicationGatewaySubnetAddressPrefix')]"
+            }
+          },
+          {
+            "name": "[variables('firewallSubnetName')]",
+            "properties": {
+              "addressPrefix": "[parameters('firewallSubnetAddressPrefix')]"
             }
           }
         ]
@@ -838,7 +845,7 @@
             "name": "[variables('fwpublicIpAddressName')]",
             "properties": {
               "subnet": {
-                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('virtualNetworks_myVNet_name'), 'AzureFirewallSubnet')]"
+                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', 'AzureFirewallSubnet')]"
               },
               "publicIPAddress": {
                 "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('fwpublicIpAddressName'))]"
