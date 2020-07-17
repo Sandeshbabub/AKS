@@ -864,7 +864,7 @@
             "name": "[variables('fwpublicIpAddressName')]",
             "properties": {
               "subnet": {
-                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', 'AzureFirewallSubnet')]"
+                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('vnetId'), 'AzureFirewallSubnet')]"
               },
               "publicIPAddress": {
                 "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('fwpublicIpAddressName'))]"
