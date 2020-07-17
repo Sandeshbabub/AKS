@@ -461,7 +461,18 @@
                 "id": "[variables('applicationGatewayPublicIpId')]"
               }
             }
+          },
+          {
+            "name": "privateip",
+            "properties": {
+              "privateIPAddress": "10.1.0.222",
+              "privateIPAllocationMethod": "Static",
+              "subnet": {
+                "id": "[variables('applicationGatewaySubnetId')]"
+              }
+            }
           }
+
         ],
         "frontendPorts": [
           {
