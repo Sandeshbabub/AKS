@@ -41,6 +41,13 @@
         "description": "Containers DNS server IP address."
       }
     },
+    "firewallSubnetAddressPrefix": {
+      "defaultValue": "10.3.0.0/16",
+      "type": "string",
+      "metadata": {
+        "description": "FW  server IP address."
+      }
+    },
     "aksDnsPrefix": {
       "defaultValue": "aks",
       "type": "string",
@@ -401,6 +408,18 @@
     {
       "type": "Microsoft.Network/publicIPAddresses",
       "name": "[variables('applicationGatewayPublicIpName')]",
+      "apiVersion": "2018-08-01",
+      "location": "[resourceGroup().location]",
+      "sku": {
+        "name": "Standard"
+      },
+      "properties": {
+        "publicIPAllocationMethod": "Static"
+      }
+    },
+    {
+      "type": "Microsoft.Network/publicIPAddresses",
+      "name": "[variables('fwpublicIpAddressName')]",
       "apiVersion": "2018-08-01",
       "location": "[resourceGroup().location]",
       "sku": {
