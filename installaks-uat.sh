@@ -1,0 +1,1012 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+  "parameters": {
+    "env": {
+      "type": "string",
+      "metadata": {
+        "description": "environment name"
+      }
+    },
+    "keyVaultName": {
+      "type": "string",
+      "metadata": {
+        "description": "Keyvault name"
+      }
+    },
+    "aksServicePrincipalAppId": {
+      "type": "string",
+      "metadata": {
+        "description": "appId of the service principal. Used by AKS to manage AKS related resources on Azure like vms, subnets."
+      }
+    },
+    "aksServicePrincipalClientSecret": {
+      "type": "securestring",
+      "metadata": {
+        "description": "password for the service principal. Used by AKS to manage Azure."
+      }
+    },
+    "aksServicePrincipalObjectId": {
+      "type": "string",
+      "metadata": {
+        "description": "objectId of the service principal."
+      }
+    },
+    "virtualNetworkAddressPrefix": {
+      "defaultValue": "10.0.0.0/8",
+      "type": "string",
+      "metadata": {
+        "description": "Containers DNS server IP address."
+      }
+    },
+    "aksSubnetAddressPrefix": {
+      "defaultValue": "10.0.0.0/16",
+      "type": "string",
+      "metadata": {
+        "description": "Containers DNS server IP address."
+      }
+    },
+    "applicationGatewaySubnetAddressPrefix": {
+      "defaultValue": "10.1.0.0/16",
+      "type": "string",
+      "metadata": {
+        "description": "Containers DNS server IP address."
+      }
+    },
+    "firewallSubnetAddressPrefix": {
+      "defaultValue": "10.3.0.0/16",
+      "type": "string",
+      "metadata": {
+        "description": "FW  server IP address."
+      }
+    },
+    "aksDnsPrefix": {
+      "defaultValue": "aks",
+      "type": "string",
+      "metadata": {
+        "description": "Optional DNS prefix to use with hosted Kubernetes API server FQDN."
+      }
+    },
+    "aksAgentOsDiskSizeGB": {
+      "defaultValue": 40,
+      "minValue": 30,
+      "maxValue": 1023,
+      "type": "int",
+      "metadata": {
+        "description": "Disk size (in GB) to provision for each of the agent pool nodes. This value ranges from 30 to 1023."
+      }
+    },
+    "aksAgentCount": {
+      "defaultValue": 3,
+      "minValue": 1,
+      "maxValue": 50,
+      "type": "int",
+      "metadata": {
+        "description": "The number of agent nodes for the cluster."
+      }
+    },
+    "aksAgentVMSize": {
+      "defaultValue": "Standard_D3_v2",
+      "allowedValues": [
+        "Standard_A0",
+        "Standard_A1",
+        "Standard_A10",
+        "Standard_A11",
+        "Standard_A1_v2",
+        "Standard_A2",
+        "Standard_A2_v2",
+        "Standard_A2m_v2",
+        "Standard_A3",
+        "Standard_A4",
+        "Standard_A4_v2",
+        "Standard_A4m_v2",
+        "Standard_A5",
+        "Standard_A6",
+        "Standard_A7",
+        "Standard_A8",
+        "Standard_A8_v2",
+        "Standard_A8m_v2",
+        "Standard_A9",
+        "Standard_B1ms",
+        "Standard_B1s",
+        "Standard_B2ms",
+        "Standard_B2s",
+        "Standard_B4ms",
+        "Standard_B8ms",
+        "Standard_D1",
+        "Standard_D11",
+        "Standard_D11_v2",
+        "Standard_D11_v2_Promo",
+        "Standard_D12",
+        "Standard_D12_v2",
+        "Standard_D12_v2_Promo",
+        "Standard_D13",
+        "Standard_D13_v2",
+        "Standard_D13_v2_Promo",
+        "Standard_D14",
+        "Standard_D14_v2",
+        "Standard_D14_v2_Promo",
+        "Standard_D15_v2",
+        "Standard_D16_v3",
+        "Standard_D16s_v3",
+        "Standard_D1_v2",
+        "Standard_D2",
+        "Standard_D2_v2",
+        "Standard_D2_v2_Promo",
+        "Standard_D2_v3",
+        "Standard_D2s_v3",
+        "Standard_D3",
+        "Standard_D32_v3",
+        "Standard_D32s_v3",
+        "Standard_D3_v2",
+        "Standard_D3_v2_Promo",
+        "Standard_D4",
+        "Standard_D4_v2",
+        "Standard_D4_v2_Promo",
+        "Standard_D4_v3",
+        "Standard_D4s_v3",
+        "Standard_D5_v2",
+        "Standard_D5_v2_Promo",
+        "Standard_D64_v3",
+        "Standard_D64s_v3",
+        "Standard_D8_v3",
+        "Standard_D8s_v3",
+        "Standard_DS1",
+        "Standard_DS11",
+        "Standard_DS11-1_v2",
+        "Standard_DS11_v2",
+        "Standard_DS11_v2_Promo",
+        "Standard_DS12",
+        "Standard_DS12-1_v2",
+        "Standard_DS12-2_v2",
+        "Standard_DS12_v2",
+        "Standard_DS12_v2_Promo",
+        "Standard_DS13",
+        "Standard_DS13-2_v2",
+        "Standard_DS13-4_v2",
+        "Standard_DS13_v2",
+        "Standard_DS13_v2_Promo",
+        "Standard_DS14",
+        "Standard_DS14-4_v2",
+        "Standard_DS14-8_v2",
+        "Standard_DS14_v2",
+        "Standard_DS14_v2_Promo",
+        "Standard_DS15_v2",
+        "Standard_DS1_v2",
+        "Standard_DS2",
+        "Standard_DS2_v2",
+        "Standard_DS2_v2_Promo",
+        "Standard_DS3",
+        "Standard_DS3_v2",
+        "Standard_DS3_v2_Promo",
+        "Standard_DS4",
+        "Standard_DS4_v2",
+        "Standard_DS4_v2_Promo",
+        "Standard_DS5_v2",
+        "Standard_DS5_v2_Promo",
+        "Standard_E16-4s_v3",
+        "Standard_E16-8s_v3",
+        "Standard_E16_v3",
+        "Standard_E16s_v3",
+        "Standard_E2_v3",
+        "Standard_E2s_v3",
+        "Standard_E32-16s_v3",
+        "Standard_E32-8s_v3",
+        "Standard_E32_v3",
+        "Standard_E32s_v3",
+        "Standard_E4-2s_v3",
+        "Standard_E4_v3",
+        "Standard_E4s_v3",
+        "Standard_E64-16s_v3",
+        "Standard_E64-32s_v3",
+        "Standard_E64_v3",
+        "Standard_E64i_v3",
+        "Standard_E64is_v3",
+        "Standard_E64s_v3",
+        "Standard_E8-2s_v3",
+        "Standard_E8-4s_v3",
+        "Standard_E8_v3",
+        "Standard_E8s_v3",
+        "Standard_F1",
+        "Standard_F16",
+        "Standard_F16s",
+        "Standard_F16s_v2",
+        "Standard_F1s",
+        "Standard_F2",
+        "Standard_F2s",
+        "Standard_F2s_v2",
+        "Standard_F32s_v2",
+        "Standard_F4",
+        "Standard_F4s",
+        "Standard_F4s_v2",
+        "Standard_F64s_v2",
+        "Standard_F72s_v2",
+        "Standard_F8",
+        "Standard_F8s",
+        "Standard_F8s_v2",
+        "Standard_G1",
+        "Standard_G2",
+        "Standard_G3",
+        "Standard_G4",
+        "Standard_G5",
+        "Standard_GS1",
+        "Standard_GS2",
+        "Standard_GS3",
+        "Standard_GS4",
+        "Standard_GS4-4",
+        "Standard_GS4-8",
+        "Standard_GS5",
+        "Standard_GS5-16",
+        "Standard_GS5-8",
+        "Standard_H16",
+        "Standard_H16m",
+        "Standard_H16mr",
+        "Standard_H16r",
+        "Standard_H8",
+        "Standard_H8m",
+        "Standard_L16s",
+        "Standard_L16s_v2",
+        "Standard_L32s",
+        "Standard_L4s",
+        "Standard_L8s",
+        "Standard_L8s_v2",
+        "Standard_M128",
+        "Standard_M128-32ms",
+        "Standard_M128-64ms",
+        "Standard_M128m",
+        "Standard_M128ms",
+        "Standard_M128s",
+        "Standard_M16-4ms",
+        "Standard_M16-8ms",
+        "Standard_M16ms",
+        "Standard_M32-16ms",
+        "Standard_M32-8ms",
+        "Standard_M32ls",
+        "Standard_M32ms",
+        "Standard_M32ts",
+        "Standard_M64",
+        "Standard_M64-16ms",
+        "Standard_M64-32ms",
+        "Standard_M64ls",
+        "Standard_M64m",
+        "Standard_M64ms",
+        "Standard_M64s",
+        "Standard_M8-2ms",
+        "Standard_M8-4ms",
+        "Standard_M8ms",
+        "Standard_NC12",
+        "Standard_NC12s_v2",
+        "Standard_NC12s_v3",
+        "Standard_NC24",
+        "Standard_NC24r",
+        "Standard_NC24rs_v2",
+        "Standard_NC24rs_v3",
+        "Standard_NC24s_v2",
+        "Standard_NC24s_v3",
+        "Standard_NC6",
+        "Standard_NC6s_v2",
+        "Standard_NC6s_v3",
+        "Standard_ND12s",
+        "Standard_ND24rs",
+        "Standard_ND24s",
+        "Standard_ND6s",
+        "Standard_NV12",
+        "Standard_NV24",
+        "Standard_NV6"
+      ],
+      "type": "string",
+      "metadata": {
+        "description": "The size of the Virtual Machine."
+      }
+    },
+    "kubernetesVersion": {
+      "defaultValue": "1.16.10",
+      "type": "string",
+      "metadata": {
+        "description": "The version of Kubernetes."
+      }
+    },
+    "aksServiceCIDR": {
+      "defaultValue": "10.2.0.0/16",
+      "type": "string",
+      "metadata": {
+        "description": "A CIDR notation IP range from which to assign service cluster IPs."
+      }
+    },
+    "aksDnsServiceIP": {
+      "defaultValue": "10.2.0.10",
+      "type": "string",
+      "metadata": {
+        "description": "Containers DNS server IP address."
+      }
+    },
+    "aksDockerBridgeCIDR": {
+      "defaultValue": "172.17.0.1/16",
+      "type": "string",
+      "metadata": {
+        "description": "A CIDR notation IP for Docker bridge."
+      }
+    },
+    "aksEnableRBAC": {
+      "type": "bool",
+      "defaultValue": false,
+      "metadata": {
+        "description": "Enable RBAC on the AKS cluster."
+      }
+    },
+    "applicationGatewaySku": {
+      "defaultValue": "WAF_v2",
+      "allowedValues": [
+        "Standard_v2",
+        "WAF_v2"
+      ],
+      "type": "string",
+      "metadata": {
+        "description": "The sku of the Application Gateway. Default: WAF_v2 (Detection mode). In order to further customize WAF, use azure portal or cli."
+      }
+    },
+    "routeTables_FW_To_AGW_RT_name": {
+      "defaultValue": "FW_To_AGW_RT",
+      "type": "string"
+    }
+  },
+  "variables": {
+    "resgpguid": "[substring(replace(guid(resourceGroup().id), '-', ''), 0, 4)]",
+    "env": "[parameters('env')]",
+    "vnetName": "[concat('virtualnetwork' ,'-',variables('env'), variables('resgpguid'))]",
+    "applicationGatewayName": "[concat('applicationgateway' ,'-',variables('env'), variables('resgpguid'))]",
+    "identityName": "[concat('appgwContrIdentity' ,variables('env'), variables('resgpguid'))]",
+    "applicationGatewayPublicIpName": "[concat('appgwpublicip' ,'-',variables('env'), variables('resgpguid'))]",
+    "kubernetesSubnetName": "kubesubnet",
+    "firewallSubnetName": "AzureFirewallSubnet",
+    "fwpublicIpAddressName": "[concat('fwwpublicip' ,'-',variables('env'), variables('resgpguid'))]",
+    "applicationGatewaySubnetName": "appgwsubnet",
+    "aksClusterName": "[concat('aks' , '-',variables('env'),variables('resgpguid'))]",
+    "vnetId": "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetName'))]",
+    "kubernetesSubnetId": "[concat(variables('vnetID'),'/subnets/', variables('kubernetesSubnetName'))]",
+    "applicationGatewaySubnetId": "[concat(variables('vnetID'),'/subnets/', variables('applicationGatewaySubnetName'))]",
+    "applicationGatewayPublicIpId": "[resourceId('Microsoft.Network/publicIPAddresses',variables('applicationGatewayPublicIpName'))]",
+    "applicationGatewayId": "[resourceId('Microsoft.Network/applicationGateways', variables('applicationGatewayName'))]",
+    "identityId": "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('identityName'))]",
+    "aksClusterId": "[resourceId('Microsoft.ContainerService/managedClusters', variables('aksClusterName'))]",
+    "networkContributorRole": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', '4d97b98b-1d4f-4787-a291-c67834d212e7')]",
+    "contributorRole": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'b24988ac-6180-42a0-ab88-20f7382dd24c')]",
+    "managedIdentityOperatorRole": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'f1a07417-d97a-45cb-824c-7a7467783830')]",
+    "readerRole": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'acdd72a7-3385-48ef-bd42-f606fba81ae7')]",
+    "webApplicationFirewallConfiguration": {
+      "enabled": "true",
+      "firewallMode": "Detection"
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
+      "name": "[variables('identityName')]",
+      "apiVersion": "2015-08-31-PREVIEW",
+      "location": "[resourceGroup().location]"
+    },
+    {
+      "type": "Microsoft.Network/virtualNetworks",
+      "name": "[variables('vnetName')]",
+      "apiVersion": "2018-08-01",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "[parameters('virtualNetworkAddressPrefix')]"
+          ]
+        },
+        "subnets": [
+          {
+            "name": "[variables('kubernetesSubnetName')]",
+            "properties": {
+              "addressPrefix": "[parameters('aksSubnetAddressPrefix')]"
+            }
+          },
+          {
+            "name": "[variables('applicationGatewaySubnetName')]",
+            "properties": {
+              "addressPrefix": "[parameters('applicationGatewaySubnetAddressPrefix')]"
+            }
+          },
+          {
+            "name": "[variables('firewallSubnetName')]",
+            "properties": {
+              "addressPrefix": "[parameters('firewallSubnetAddressPrefix')]"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "Microsoft.Network/publicIPAddresses",
+      "name": "[variables('applicationGatewayPublicIpName')]",
+      "apiVersion": "2018-08-01",
+      "location": "[resourceGroup().location]",
+      "sku": {
+        "name": "Standard"
+      },
+      "properties": {
+        "publicIPAllocationMethod": "Static"
+      }
+    },
+    {
+      "type": "Microsoft.Network/publicIPAddresses",
+      "name": "[variables('fwpublicIpAddressName')]",
+      "apiVersion": "2018-08-01",
+      "location": "[resourceGroup().location]",
+      "sku": {
+        "name": "Standard"
+      },
+      "properties": {
+        "publicIPAllocationMethod": "Static"
+      }
+    },
+    {
+      "type": "Microsoft.Network/applicationGateways",
+      "name": "[variables('applicationGatewayName')]",
+      "apiVersion": "2018-08-01",
+      "location": "[resourceGroup().location]",
+      "tags": {
+        "managed-by-k8s-ingress": "true"
+      },
+      "properties": {
+        "sku": {
+          "name": "[parameters('applicationGatewaySku')]",
+          "tier": "[parameters('applicationGatewaySku')]",
+          "capacity": 2
+        },
+        "sslCertificates": [
+          {
+            "name": "appGatewaySslCert",
+            "properties": {
+              "keyVaultSecretId": "[concat('https://',parameters('keyVaultName'),'.vault.azure.net/secrets/Kantar/','30d460cae9c34e0b8a26e582f54c6969')]"
+            }
+          }
+        ],
+        "gatewayIPConfigurations": [
+          {
+            "name": "appGatewayIpConfig",
+            "properties": {
+              "subnet": {
+                "id": "[variables('applicationGatewaySubnetId')]"
+              }
+            }
+          }
+        ],
+        "frontendIPConfigurations": [
+          {
+            "name": "appGatewayFrontendIP",
+            "properties": {
+              "PublicIPAddress": {
+                "id": "[variables('applicationGatewayPublicIpId')]"
+              }
+            }
+          },
+          {
+            "name": "privateip",
+            "properties": {
+              "privateIPAddress": "10.10.0.222",
+              "privateIPAllocationMethod": "Static",
+              "subnet": {
+                "id": "[variables('applicationGatewaySubnetId')]"
+              }
+            }
+          }
+
+        ],
+        "frontendPorts": [
+          {
+            "name": "httpPort",
+            "properties": {
+              "Port": 80
+            }
+          },
+          {
+            "name": "httpsPort",
+            "properties": {
+              "Port": 443
+            }
+          }
+        ],
+        "backendAddressPools": [
+          {
+            "name": "bepool",
+            "properties": {
+              "backendAddresses": []
+            }
+          }
+        ],
+        "httpListeners": [
+          {
+            "name": "httpListener",
+            "properties": {
+              "protocol": "Http",
+              "frontendPort": {
+                "id": "[concat(variables('applicationGatewayId'), '/frontendPorts/httpPort')]"
+              },
+              "frontendIPConfiguration": {
+                "id": "[concat(variables('applicationGatewayId'), '/frontendIPConfigurations/appGatewayFrontendIP')]"
+              }
+            }
+          },
+          {
+            "name": "httpsListener",
+            "properties": {
+              "frontendIPConfiguration": {
+                "id": "[concat(variables('applicationGatewayId'), '/frontendIPConfigurations/appGatewayFrontendIP')]"
+              },
+              "frontendPort": {
+                "id": "[concat(variables('applicationGatewayId'), '/frontendPorts/httpsPort')]"
+              },
+              "protocol": "Https",
+              "SslCertificate": {
+                "Id": "[resourceId('Microsoft.Network/applicationGateways/sslCertificates', variables('applicationGatewayName'), 'appGatewaySslCert')]"
+              }
+              
+
+            }
+
+          
+          }
+        ],
+        "backendHttpSettingsCollection": [
+          {
+            "name": "setting",
+            "properties": {
+              "port": 80,
+              "protocol": "Http"
+            }
+          }
+        ],
+        "requestRoutingRules": [
+          {
+            "name": "rule1",
+            "properties": {
+              "httpListener": {
+                "id": "[concat(variables('applicationGatewayId'), '/httpListeners/httpsListener')]"
+              },
+              "backendAddressPool": {
+                "id": "[concat(variables('applicationGatewayId'), '/backendAddressPools/bepool')]"
+              },
+              "backendHttpSettings": {
+                "id": "[concat(variables('applicationGatewayId'), '/backendHttpSettingsCollection/setting')]"
+              }
+            }
+          }
+        ],
+        "webApplicationFirewallConfiguration": "[if(equals(parameters('applicationGatewaySku'), 'WAF_v2'), variables('webApplicationFirewallConfiguration'), json('null'))]"
+      },
+      "dependsOn": [
+        "[concat('Microsoft.Network/virtualNetworks/', variables('vnetName'))]",
+        "[concat('Microsoft.Network/publicIPAddresses/', variables('applicationGatewayPublicIpName'))]"
+      ],
+      "identity": {
+        "type": "UserAssigned",
+        "userAssignedIdentities": {
+          "[variables('identityID')]": {
+          }
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "name": "RoleAssignmentDeploymentForKubenetesSp",
+      "apiVersion": "2017-05-10",
+      "subscriptionId": "[subscription().subscriptionId]",
+      "resourceGroup": "[resourceGroup().name]",
+      "properties": {
+        "mode": "Incremental",
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "parameters": {},
+          "variables": {},
+          "resources": [
+            {
+              "type": "Microsoft.Network/virtualNetworks/subnets/providers/roleAssignments",
+              "apiVersion": "2017-05-01",
+              "name": "[concat(variables('vnetName'), '/', variables('kubernetesSubnetName'),'/Microsoft.Authorization/', guid(resourceGroup().id, 'aksvnetaccess'))]",
+              "properties": {
+                "roleDefinitionId": "[variables('networkContributorRole')]",
+                "principalId": "[parameters('aksServicePrincipalObjectId')]",
+                "scope": "[variables('kubernetesSubnetId')]"
+              }
+            },
+            {
+              "type": "Microsoft.ManagedIdentity/userAssignedIdentities/providers/roleAssignments",
+              "apiVersion": "2017-05-01",
+              "name": "[concat(variables('identityName'), '/Microsoft.Authorization/', guid(resourceGroup().id, 'aksidentityaccess'))]",
+              "properties": {
+                "roleDefinitionId": "[variables('managedIdentityOperatorRole')]",
+                "principalId": "[parameters('aksServicePrincipalObjectId')]",
+                "scope": "[variables('identityId')]",
+                "principalType": "ServicePrincipal"
+              }
+            }
+          ]
+        }
+      },
+      "dependsOn": [
+        "[concat('Microsoft.Network/virtualNetworks/', variables('vnetName'))]",
+        "[concat('Microsoft.ManagedIdentity/userAssignedIdentities/', variables('identityName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.Resources/deployments",
+      "name": "RoleAssignmentDeploymentForUserAssignedIdentity",
+      "apiVersion": "2017-05-10",
+      "subscriptionId": "[subscription().subscriptionId]",
+      "resourceGroup": "[resourceGroup().name]",
+      "properties": {
+        "mode": "Incremental",
+        "template": {
+          "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+          "contentVersion": "1.0.0.0",
+          "parameters": {},
+          "variables": {},
+          "resources": [
+            {
+              "type": "Microsoft.Network/applicationgateways/providers/roleAssignments",
+              "apiVersion": "2017-05-01",
+              "name": "[concat(variables('applicationGatewayName'), '/Microsoft.Authorization/', guid(resourceGroup().id, 'identityappgwaccess'))]",
+              "properties": {
+                "roleDefinitionId": "[variables('contributorRole')]",
+                "principalId": "[reference(variables('identityId'), '2015-08-31-PREVIEW').principalId]",
+                "scope": "[variables('applicationGatewayId')]"
+              }
+            },
+            {
+              "type": "Microsoft.Authorization/roleAssignments",
+              "apiVersion": "2017-05-01",
+              "name": "[guid(resourceGroup().id, 'identityrgaccess')]",
+              "properties": {
+                "roleDefinitionId": "[variables('readerRole')]",
+                "principalId": "[reference(variables('identityId'), '2015-08-31-PREVIEW').principalId]",
+                "scope": "[resourceGroup().id]"
+              }
+            }
+          ]
+        }
+      },
+      "dependsOn": [
+        "[concat('Microsoft.Network/applicationgateways/', variables('applicationGatewayName'))]",
+        "[concat('Microsoft.ManagedIdentity/userAssignedIdentities/', variables('identityName'))]"
+      ]
+    },
+    {
+      "type": "Microsoft.ContainerService/managedClusters",
+      "name": "[variables('aksClusterName')]",
+      "apiVersion": "2020-02-01",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "kubernetesVersion": "[parameters('kubernetesVersion')]",
+        "enableRBAC": "[parameters('aksEnableRBAC')]",
+        "dnsPrefix": "[parameters('aksDnsPrefix')]",
+        "agentPoolProfiles": [
+          {
+            "name": "agentpool",
+            "osDiskSizeGB": "[parameters('aksAgentOsDiskSizeGB')]",
+            "count": "[parameters('aksAgentCount')]",
+            "vmSize": "[parameters('aksAgentVMSize')]",
+            "osType": "Linux",
+            "storageProfile": "ManagedDisks",
+            "vnetSubnetID": "[variables('kubernetesSubnetId')]",
+            "dnsPrefix": "agents",
+            "maxPods": 30,
+            "type": "VirtualMachineScaleSets",
+            "enableAutoScaling": true,
+            "minCount": 3,
+            "maxCount": 10
+          }
+        ],
+        "servicePrincipalProfile": {
+          "clientId": "[parameters('aksServicePrincipalAppId')]",
+          "secret": "[parameters('aksServicePrincipalClientSecret')]"
+        },
+        "networkProfile": {
+          "networkPlugin": "azure",
+          "serviceCidr": "[parameters('aksServiceCIDR')]",
+          "dnsServiceIP": "[parameters('aksDnsServiceIP')]",
+          "dockerBridgeCidr": "[parameters('aksDockerBridgeCIDR')]"
+        }
+      },
+      "dependsOn": [
+        "[concat('Microsoft.Network/virtualNetworks/', variables('vnetName'))]",
+        "[concat('Microsoft.Resources/deployments/', 'RoleAssignmentDeploymentForKubenetesSp')]"
+      ]
+    },
+
+    {
+      "name": "AzureFirewall",
+      "type": "Microsoft.Network/azureFirewalls",
+      "apiVersion": "2020-04-01",
+      "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetName'))]",
+        "[resourceId('Microsoft.Network/publicIPAddresses', variables('fwpublicIpAddressName'))]"
+      ],
+      "tags": {},
+      "properties": {
+        "applicationRuleCollections": [
+          {
+            "name": "akstools",
+            "properties": {
+              "priority": 101,
+              "action": {
+                "type": "Allow"
+              },
+              "rules": [
+                {
+                  "name": "allow network",
+                  "protocols": [
+                    {
+                      "protocolType": "Http",
+                      "port": 80
+                    },
+                    {
+                      "protocolType": "Https",
+                      "port": 443
+                    }
+                  ],
+                  "fqdnTags": [],
+                  "targetFqdns": [
+                    "download.opensuse.org",
+                    "packages.microsoft.com",
+                    "dc.services.visualstudio.com",
+                    "*.opinsights.azure.com",
+                    "*.monitoring.azure.com",
+                    "gov-prod-policy-data.trafficmanager.net",
+                    "apt.dockerproject.org",
+                    "nvidia.github.io"
+                  ],
+                  "sourceAddresses": [
+                    "*"
+                  ],
+                  "sourceIpGroups": []
+                }
+              ]
+            }
+          },
+          {
+            "name": "osupdates",
+            "properties": {
+              "priority": 102,
+              "action": {
+                "type": "Allow"
+              },
+              "rules": [
+                {
+                  "name": "allow network",
+                  "protocols": [
+                    {
+                      "protocolType": "Http",
+                      "port": 80
+                    },
+                    {
+                      "protocolType": "Https",
+                      "port": 443
+                    }
+                  ],
+                  "fqdnTags": [],
+                  "targetFqdns": [
+                    "download.opensuse.org",
+                    "*.ubuntu.com",
+                    "packages.microsoft.com",
+                    "snapcraft.io",
+                    "api.snapcraft.io"
+                  ],
+                  "sourceAddresses": [
+                    "*"
+                  ],
+                  "sourceIpGroups": []
+                }
+              ]
+            }
+          },
+          {
+            "name": "aksbasics",
+            "properties": {
+              "priority": 100,
+              "action": {
+                "type": "Allow"
+              },
+              "rules": [
+                {
+                  "name": "allow network",
+                  "protocols": [
+                    {
+                      "protocolType": "Http",
+                      "port": 80
+                    },
+                    {
+                      "protocolType": "Https",
+                      "port": 443
+                    }
+                  ],
+                  "fqdnTags": [],
+                  "targetFqdns": [
+                    "*.azmk8s.io",
+                    "aksrepos.azurecr.io",
+                    "*.blob.core.windows.net",
+                    "mcr.microsoft.com",
+                    "*.cdn.mscr.io",
+                    "management.azure.com",
+                    "login.microsoftonline.com",
+                    "api.snapcraft.io",
+                    "*auth.docker.io",
+                    "*cloudflare.docker.io",
+                    "*cloudflare.docker.com",
+                    "*registry-1.docker.io",
+                    "shinyacrdev.azurecr.io",
+                    "",
+                    "mran.microsoft.com",
+                    "*.agentsvc.azure-automation.net",
+                    "52.149.198.217"
+                  ],
+                  "sourceAddresses": [
+                    "*"
+                  ],
+                  "sourceIpGroups": []
+                }
+              ]
+            }
+          }
+        ],
+        "natRuleCollections": [
+          {
+            "name": "inboundlbrule",
+            "properties": {
+              "priority": 100,
+              "action": {
+                "type": "Dnat"
+              },
+              "rules": [
+                {
+                  "name": "allow",
+                  "protocols": [
+                    "TCP"
+                  ],
+                  "translatedAddress": "10.1.0.222",
+                  "translatedPort": "443",
+                  "sourceAddresses": [
+                    "*"
+                  ],
+                  "sourceIpGroups": [],
+                  "destinationAddresses": [
+                    //"[resourceId('Microsoft.Network/publicIPAddresses', variables('fwpublicIpAddressName'))]"
+                    "[reference(resourceId('Microsoft.Network/publicIPAddresses',variables('fwpublicIpAddressName'))).IpAddress]"
+                  ],
+                  "destinationPorts": [
+                    "443"
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "networkRuleCollections": [
+          {
+            "name": "aksnetwork",
+            "properties": {
+              "priority": 100,
+              "action": {
+                "type": "Allow"
+              },
+              "rules": [
+                {
+                  "name": "allow network",
+                  "protocols": [
+                    "TCP"
+                  ],
+                  "sourceAddresses": [
+                    "*"
+                  ],
+                  "destinationAddresses": [
+                    "52.188.76.162"
+                  ],
+                  "sourceIpGroups": [],
+                  "destinationIpGroups": [],
+                  "destinationFqdns": [],
+                  "destinationPorts": [
+                    "80",
+                    "443",
+                    "9000"
+                  ]
+                }
+              ]
+            }
+          }
+        ],
+        "ipConfigurations": [
+          {
+            "name": "[variables('fwpublicIpAddressName')]",
+            "properties": {
+              "subnet": {
+                //"id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('vnetId'), 'AzureFirewallSubnet')]",
+                "id": "[concat(variables('vnetId'), '/subnets/AzureFirewallSubnet')]"
+              },
+              "publicIPAddress": {
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('fwpublicIpAddressName'))]"
+              }
+            }
+          }
+        ],
+        "threatIntelMode": "Alert",
+        "sku": {
+
+          "tier": "Standard"
+        },
+        "additionalProperties": {}
+      }
+
+    },
+    {
+      "type": "Microsoft.Network/routeTables",
+      "apiVersion": "2020-04-01",
+      "name": "[parameters('routeTables_FW_To_AGW_RT_name')]",
+      "location": "eastus",
+      "tags": {
+        "Application": "Shiny",
+        "Domain": "Analytics",
+        "Program": "Shiny"
+      },
+      "properties": {
+        "disableBgpRoutePropagation": false,
+        "routes": [
+          {
+            "name": "shinyproxypreprodfw_fw_r",
+            "properties": {
+              "addressPrefix": "0.0.0.0/0",
+              "nextHopType": "VirtualAppliance",
+              "nextHopIpAddress": "10.2.0.4"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "Microsoft.Network/routeTables/routes",
+      "apiVersion": "2020-04-01",
+      "name": "[concat(parameters('routeTables_FW_To_AGW_RT_name'), '/shinyproxypreprodfw_fw_r')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/routeTables', parameters('routeTables_FW_To_AGW_RT_name'))]"
+      ],
+      "properties": {
+        "addressPrefix": "0.0.0.0/0",
+        "nextHopType": "VirtualAppliance",
+        "nextHopIpAddress": "10.2.0.4"
+      }
+    }
+  ],
+   "outputs": {
+        "subscriptionId": {
+            "type": "string",
+            "value": "[subscription().subscriptionId]"
+        },
+        "resourceGroupName": {
+            "type": "string",
+            "value": "[resourceGroup().name]"
+        },
+        "applicationGatewayName": {
+            "type": "string",
+            "value": "[variables('applicationGatewayName')]"
+        },
+        "identityResourceId": {
+            "type": "string",
+            "value": "[variables('identityId')]"
+        },
+        "identityClientId": {
+            "type": "string",
+            "value": "[reference(variables('identityID'), '2015-08-31-PREVIEW').clientId]"
+        },
+        "aksApiServerAddress": {
+            "type": "string",
+            "value": "[reference(variables('aksClusterId'), '2018-03-31').fqdn]"
+        },
+        "aksClusterName": {
+            "type": "string",
+            "value": "[variables('aksClusterName')]"
+        }
+    }
+}
