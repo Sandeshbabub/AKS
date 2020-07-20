@@ -2,6 +2,12 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
   "parameters": {
+    "env": {
+      "type": "string",
+      "metadata": {
+        "description": "environment name"
+      }
+    },
     "aksServicePrincipalAppId": {
       "type": "string",
       "metadata": {
@@ -340,15 +346,16 @@
   },
   "variables": {
     "resgpguid": "[substring(replace(guid(resourceGroup().id), '-', ''), 0, 4)]",
-    "vnetName": "[concat('virtualnetwork' , variables('resgpguid'))]",
-    "applicationGatewayName": "[concat('applicationgateway' , variables('resgpguid'))]",
-    "identityName": "[concat('appgwContrIdentity' , variables('resgpguid'))]",
-    "applicationGatewayPublicIpName": "[concat('appgwpublicip' , variables('resgpguid'))]",
+    "env": "[parameters('env')]",
+    "vnetName": "[concat('virtualnetwork' ,'-',variables('env'), variables('resgpguid'))]",
+    "applicationGatewayName": "[concat('applicationgateway' ,'-',variables('env'), variables('resgpguid'))]",
+    "identityName": "[concat('appgwContrIdentity' ,variables('env'), variables('resgpguid'))]",
+    "applicationGatewayPublicIpName": "[concat('appgwpublicip' ,'-',variables('env'), variables('resgpguid'))]",
     "kubernetesSubnetName": "kubesubnet",
     "firewallSubnetName": "AzureFirewallSubnet",
-    "fwpublicIpAddressName": "[concat('fwwpublicip' , variables('resgpguid'))]",
+    "fwpublicIpAddressName": "[concat('fwwpublicip' ,'-',variables('env'), variables('resgpguid'))]",
     "applicationGatewaySubnetName": "appgwsubnet",
-    "aksClusterName": "[concat('aks' , variables('resgpguid'))]",
+    "aksClusterName": "[concat('aks' , '-',variables('env'),variables('resgpguid'))]",
     "vnetId": "[resourceId('Microsoft.Network/virtualNetworks', variables('vnetName'))]",
     "kubernetesSubnetId": "[concat(variables('vnetID'),'/subnets/', variables('kubernetesSubnetName'))]",
     "applicationGatewaySubnetId": "[concat(variables('vnetID'),'/subnets/', variables('applicationGatewaySubnetName'))]",
