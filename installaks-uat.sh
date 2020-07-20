@@ -14,6 +14,12 @@
         "description": "Keyvault name"
       }
     },
+    "secretID": {
+      "type": "string",
+      "metadata": {
+        "description": "secretID"
+      }
+    },
     "aksServicePrincipalAppId": {
       "type": "string",
       "metadata": {
@@ -460,7 +466,8 @@
           {
             "name": "appGatewaySslCert",
             "properties": {
-              "keyVaultSecretId": "[concat('https://',parameters('keyVaultName'),'.vault.azure.net/secrets/Kantar/','30d460cae9c34e0b8a26e582f54c6969')]"
+              //"keyVaultSecretId": "https://shiny-kv-preprod.vault.azure.net/secrets/Kantar/30d460cae9c34e0b8a26e582f54c6969"
+              "keyVaultSecretId": "[concat('https://',parameters('keyVaultName'),'.vault.azure.net/secrets/Kantar/',parameters('secretID'))]"
             }
           }
         ],
